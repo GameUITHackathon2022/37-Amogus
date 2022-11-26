@@ -10,18 +10,18 @@ const {
   Schema
 } = _mongoose.default;
 const commentSchema = new Schema({
-  user_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+  userId: {
+    type: String
   },
-  post_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Post'
+  postId: {
+    type: String
   },
   content: {
     type: String,
     require: true
   }
+}, {
+  timestamps: true
 });
 const Comment = _mongoose.default.model('Comment', commentSchema);
 exports.Comment = Comment;

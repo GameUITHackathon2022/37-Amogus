@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 const { Schema } = mongoose
 const userSchema = new Schema({
   userId: {
-    type: String
+    type: String,
   },
   email: {
     type: String,
@@ -13,12 +13,15 @@ const userSchema = new Schema({
   role: {
     type: String,
   },
-  rank: { 
+  about: {
     type: String,
-  },  
-  point: {
-    type: Number
-  }
+  },
+  address: {
+    type: String,
+  },
+  ava: {
+    type: String,
+  },
 })
 
 export const User = mongoose.model('User', userSchema)

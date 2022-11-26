@@ -9,6 +9,11 @@ var _post = require("./post.controller");
 const router = (0, _express.Router)();
 router.route('/create').post(_post.postController.createPost);
 router.route('/verify').post(_post.postController.verifyPost);
+<<<<<<< HEAD
+// router.route('/admin').get(postController.getPostNoneCheck)
+=======
+router.route('/admin').get(_post.postController.getPostNoneCheck);
+>>>>>>> duclong
 router.route('/').get(_post.postController.getPosts);
 var _default = router;
 exports.default = _default;

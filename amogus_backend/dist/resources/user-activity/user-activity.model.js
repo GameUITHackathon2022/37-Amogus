@@ -3,21 +3,25 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Like = void 0;
+exports.UserActivity = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const {
   Schema
 } = _mongoose.default;
-const likeSchema = new Schema({
+const userActivitySchema = new Schema({
   userId: {
     type: String
   },
   postId: {
     type: String
+  },
+  join: {
+    type: Boolean
+  },
+  point: {
+    type: Number
   }
-}, {
-  timestamps: true
 });
-const Like = _mongoose.default.model('Like', likeSchema);
-exports.Like = Like;
+const UserActivity = _mongoose.default.model('UserActivity', userActivitySchema);
+exports.UserActivity = UserActivity;

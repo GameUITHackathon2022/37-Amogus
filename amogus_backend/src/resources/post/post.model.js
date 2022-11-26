@@ -9,19 +9,33 @@ const postSchema = new Schema(
       type: String,
     },
     title: {
-        type: String
+      type: String,
     },
     isActivity: {
-        type: Boolean
+      type: Boolean,
     },
     isChecked: {
-        type: Boolean
+      type: Boolean,
     },
     isDeleted: {
-        type: Boolean
-    }
-}, {
-    timestamps: true
-})
+      type: Boolean,
+    },
+    imageURL: {
+      type: String,
+    },
+    dateStart: {
+      type: Date,
+    },
+    dateEnd: {
+      type: Date,
+    },
+    point: {
+      type: Number,
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
 
 export const Post = mongoose.model('Post', postSchema)

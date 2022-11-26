@@ -1,12 +1,15 @@
 import mongoose from 'mongoose'
 const { Schema } = mongoose
-const likeSchema = new Schema({
+const likeSchema = new Schema(
+  {
     userId: {
-        type: String,
+      type: String,
     },
     postId: {
-        type: String
-    }
-})
+      type: String,
+    },
+  },
+  { timestamps: true }
+)
 
 export const Like = mongoose.model('Like', likeSchema)

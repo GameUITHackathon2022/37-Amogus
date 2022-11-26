@@ -5,8 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _express = require("express");
-var _comment = require("./comment.controller");
+var _share = require("./share.controller");
 const router = (0, _express.Router)();
-router.route('/').get(_comment.commentController.getCommentByPostId).post(_comment.commentController.createComment);
+router.route('/').post(_share.shareController.create);
 var _default = router;
 exports.default = _default;

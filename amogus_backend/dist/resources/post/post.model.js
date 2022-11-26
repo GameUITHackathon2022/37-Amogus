@@ -27,6 +27,18 @@ const postSchema = new Schema({
   },
   isDeleted: {
     type: Boolean
+  },
+  imageURL: {
+    type: String
+  },
+  dateStart: {
+    type: Date
+  },
+  dateEnd: {
+    type: Date
+  },
+  point: {
+    type: Number
   }
 }, {
   timestamps: true

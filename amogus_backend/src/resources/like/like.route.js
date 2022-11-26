@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import {controller} from './like.controller'
+import { likeController } from './like.controller'
 
 const router = Router()
 
+router.route('/').post(likeController.create)
 
 export default router

@@ -1,23 +1,23 @@
 import { Share } from './share.model'
 
-export const increaseShare = (postId, userId) => {
+export const create = async (postId, userId) => {
   try {
-    const share = Share.create({ postId: postId, userId: userId })
+    const data = { postId: postId, userId: userId }
+    const share = await Share.create(data)
     return share
   } catch (error) {
     console.log(error)
+    res.status(400).end()
   }
 }
 
-const countByPostId = (postId) => {
+const countByPostId = async (postId) => {
   try {
-    const shares = Share.find({ post_id: postId })
-    shares.count((error, count) => {
-      if (error) console.log(error)
-      else return count
-    })
+    const shares = await Share.count({ postId: postId })
+    return shares
   } catch (error) {
     console.log(error)
+    res.status(400).end()
   }
 }
 

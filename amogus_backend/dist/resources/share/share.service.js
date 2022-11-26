@@ -3,30 +3,31 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.shareService = exports.increaseShare = void 0;
+exports.shareService = exports.create = void 0;
 var _share = require("./share.model");
-const increaseShare = (postId, userId) => {
+const create = async (postId, userId) => {
   try {
-    const share = _share.Share.create({
+    const data = {
       postId: postId,
       userId: userId
-    });
+    };
+    const share = await _share.Share.create(data);
     return share;
   } catch (error) {
     console.log(error);
+    res.status(400).end();
   }
 };
-exports.increaseShare = increaseShare;
-const countByPostId = postId => {
+exports.create = create;
+const countByPostId = async postId => {
   try {
-    const shares = _share.Share.find({
-      post_id: postId
+    const shares = await _share.Share.count({
+      postId: postId
     });
-    shares.count((error, count) => {
-      if (error) console.log(error);else return count;
-    });
+    return shares;
   } catch (error) {
     console.log(error);
+    res.status(400).end();
   }
 };
 const shareService = {

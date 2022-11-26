@@ -1,8 +1,22 @@
+import { Share } from '../share/share.model'
 import { Post } from './post.model'
 import { PostTag } from '../post-tag/post-tag.model'
 import { User } from '../user/user.model'
+import { UserActivity } from '../user-activity/user-activity.model'
+import { userService } from '../user/user.service'
 
 const createPost = async (data, uid) => {
+  let point = 0
+  const admin = await User.find({
+    userId: uid,
+    role: 'ADMIN',
+  })
+  console.log(admin)
+  if (data.isActivity == true) {
+    console.log('here')
+    if (admin.length < 1) return 'Permission denied'
+    point = data.point
+  }
   const post = await Post.create({
     userId: uid,
     content: data.content,
@@ -10,17 +24,41 @@ const createPost = async (data, uid) => {
     isActivity: data.isActivity,
     isChecked: false,
     isDeleted: false,
+    dateStart: data.dateStart,
+    dateEnd: data.dateEnd,
+    point,
+    imageURL: data.imageURL,
   })
-  const tags = data.tags.split(',')
+
   const postTag = []
-  for (const tag of tags) {
-    postTag.push(
-      await PostTag.create({
-        postId: post.id,
-        tag,
-      })
-    )
+
+  if (data.tags) {
+    const tags = data.tags.split(',')
+    for (const tag of tags) {
+      postTag.push(
+        await PostTag.create({
+          postId: post.id,
+          tag,
+        })
+      )
+    }
   }
+
+  if (data.isActivity == true && admin.length > 0) {
+    console.log('this one')
+    const join = await UserActivity.create({
+      userId: uid,
+      postId: post.id,
+      join: true,
+      point: data.point,
+    })
+    return {
+      post,
+      postTag,
+      join,
+    }
+  }
+
   return {
     post,
     postTag,
@@ -32,7 +70,7 @@ const verifyPost = async (id, data, uid) => {
     userId: uid,
     role: 'ADMIN',
   })
-  if (!admin) return 'Permission denied'
+  if (admin.length < 1) return 'Permission denied'
   if (data.verify == true) {
     const post = await Post.findOneAndUpdate(
       {
@@ -52,18 +90,38 @@ const verifyPost = async (id, data, uid) => {
       isDeleted: true,
     }
   )
-  return post
+  return {
+    post,
+  }
 }
 
 const getPosts = async () => {
-  const docs = await Post.find()
-    // .sort({ createAt })
-    .limit(5)
+  const docs = await Post.find({ isChecked: true }).select('-isDeleted')
+  if (docs.length === 0) throw new Error('Not found')
   return docs
+}
+
+const getInteractive = async (postId) => {
+  console.log(postId)
+  const shares = await Share.find({ postId: postId })
+  console.log(shares)
+}
+const getPostNoneCheck = async () => {
+  const posts = await Post.find({ isChecked: false })
+  if (posts.length === 0) throw new Error('Not found')
+  const results = new Array()
+  for (let post of posts) {
+    const user = await userService.getProfileById(post.userId)
+    const result = { user: user, post: post }
+    results.push(result)
+  }
+  return results
 }
 
 export const postService = {
   createPost: createPost,
   getPosts: getPosts,
+  getInteractive: getInteractive,
   verifyPost: verifyPost,
+  getPostNoneCheck: getPostNoneCheck,
 }

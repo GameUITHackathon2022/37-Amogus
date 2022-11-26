@@ -11,13 +11,15 @@ const {
 } = _mongoose.default;
 const shareSchema = new Schema({
   userId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'User'
   },
   postId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Post'
   }
+}, {
+  timestamps: true
 });
-const Share = _mongoose.default.model('Comment', shareSchema);
+const Share = _mongoose.default.model('Share', shareSchema);
 exports.Share = Share;

@@ -1,7 +1,6 @@
 import express from 'express'
 import initWebRoutes from './route/web'
 import { json, urlencoded } from 'body-parser'
-import postRoute from './resources/post/post.route'
 import cors from 'cors'
 import morgan from 'morgan'
 import 'dotenv/config'
@@ -15,8 +14,6 @@ app.use(morgan('dev'))
 app.use(json())
 app.use(urlencoded({ extended: true }))
 initWebRoutes(app)
-
-app.use('/api/post', postRoute)
 
 export const start = async () => {
   try {

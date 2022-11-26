@@ -22,11 +22,14 @@ const userSchema = new Schema({
   role: {
     type: String
   },
-  rank: {
+  about: {
     type: String
   },
-  point: {
-    type: Number
+  address: {
+    type: String
+  },
+  ava: {
+    type: String
   }
 });
 const User = _mongoose.default.model('User', userSchema);
