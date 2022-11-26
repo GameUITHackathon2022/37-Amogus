@@ -34,10 +34,7 @@ const createPost = async (data, uid) => {
     point,
     imageURL: data.imageURL
   });
-<<<<<<< HEAD
   const postTag = [];
-=======
->>>>>>> duclong
   if (data.tags) {
     const tags = data.tags.split(',');
     for (const tag of tags) {
@@ -91,8 +88,12 @@ const verifyPost = async (id, data, uid) => {
 };
 const getPosts = async () => {
   const docs = await _post.Post.find({
-    isChecked: true
-  }).select('-isDeleted');
+    $or: [{
+      isChecked: true
+    }, {
+      isActivity: true
+    }]
+  });
   if (docs.length === 0) throw new Error('Not found');
   return docs;
 };
@@ -105,7 +106,8 @@ const getInteractive = async postId => {
 };
 const getPostNoneCheck = async () => {
   const posts = await _post.Post.find({
-    isChecked: false
+    isChecked: false,
+    isActivity: false
   });
   if (posts.length === 0) throw new Error('Not found');
   const results = new Array();
@@ -119,11 +121,29 @@ const getPostNoneCheck = async () => {
   }
   return results;
 };
+const deletePost = async (id, uid) => {
+  const check = await _post.Post.find({
+    userId: uid,
+    postId: id
+  });
+  const admin = await _user.User.find({
+    userId: uid,
+    role: 'ADMIN'
+  });
+  if (check.length < 1 && admin.length < 1) {
+    return 'Permission denied';
+  }
+  await _post.Post.deleteOne({
+    id
+  });
+  return 'deleted';
+};
 const postService = {
   createPost: createPost,
   getPosts: getPosts,
   getInteractive: getInteractive,
   verifyPost: verifyPost,
-  getPostNoneCheck: getPostNoneCheck
+  getPostNoneCheck: getPostNoneCheck,
+  deletePost: deletePost
 };
 exports.postService = postService;

@@ -12,5 +12,6 @@ router.route('/profile').get(_user.controller.profile);
 router.route('/create').post(_user.controller.createUser);
 router.route('/editProfile').put(_user.controller.editProfile);
 router.route('/rank').get(_user.controller.rankAndPoints);
+router.route('/:id').get(_user.controller.getById);
 var _default = router;
 exports.default = _default;

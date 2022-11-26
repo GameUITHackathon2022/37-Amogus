@@ -6,11 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.userActivityService = void 0;
 var _userActivity = require("./user-activity.model");
 var _user = require("../user/user.model");
-<<<<<<< HEAD
 var _post = require("../post/post.model");
-=======
 var _user2 = require("../user/user.service");
->>>>>>> duclong
 const joinActivity = async (id, uid) => {
   const check = await _userActivity.UserActivity.find({
     postId: id,
@@ -46,6 +43,7 @@ const getUsers = async postId => {
   const activities = await _userActivity.UserActivity.find({
     postId: postId
   });
+  console.log(activities);
   if (!activities || activities.length === 0) throw new Error('not found');
   const results = new Array();
   for (const activity of activities) {

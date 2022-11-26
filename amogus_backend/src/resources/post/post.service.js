@@ -96,7 +96,9 @@ const verifyPost = async (id, data, uid) => {
 }
 
 const getPosts = async () => {
-  const docs = await Post.find({ isChecked: true }).select('-isDeleted')
+  const docs = await Post.find({
+    $or: [{ isChecked: true }, { isActivity: true }],
+  })
   if (docs.length === 0) throw new Error('Not found')
   return docs
 }
@@ -107,7 +109,7 @@ const getInteractive = async (postId) => {
   console.log(shares)
 }
 const getPostNoneCheck = async () => {
-  const posts = await Post.find({ isChecked: false })
+  const posts = await Post.find({ isChecked: false, isActivity: false })
   if (posts.length === 0) throw new Error('Not found')
   const results = new Array()
   for (let post of posts) {
@@ -117,6 +119,15 @@ const getPostNoneCheck = async () => {
   }
   return results
 }
+const deletePost = async (id, uid) => {
+  const check = await Post.find({ userId: uid, postId: id })
+  const admin = await User.find({ userId: uid, role: 'ADMIN' })
+  if (check.length < 1 && admin.length < 1) {
+    return 'Permission denied'
+  }
+  await Post.deleteOne({ id })
+  return 'deleted'
+}
 
 export const postService = {
   createPost: createPost,
@@ -124,4 +135,5 @@ export const postService = {
   getInteractive: getInteractive,
   verifyPost: verifyPost,
   getPostNoneCheck: getPostNoneCheck,
+  deletePost: deletePost,
 }

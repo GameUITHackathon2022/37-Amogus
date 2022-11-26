@@ -59,10 +59,22 @@ const rankAndPoints = async (req, res) => {
   }
 }
 
+const getById = async (req, res, next) => {
+  try {
+    const user = await userService.getProfileById(req.params.id)
+    res.status(200).json(user)
+  } catch (error) {
+    if (error.message === 'Not found') res.status(404).send('User not found')
+    console.error(error)
+    res.status(400).send(error)
+  }
+}
+
 export const controller = {
   getAllUsers: getAllUsers,
   createUser: createUser,
   profile: profile,
   editProfile: editProfile,
   rankAndPoints: rankAndPoints,
+  getById: getById,
 }

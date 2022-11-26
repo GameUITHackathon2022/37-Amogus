@@ -19,12 +19,8 @@ let initWebRoutes = app => {
   app.use('/api/post', _post.default);
   app.use('/api/like', _like.default);
   app.use('/api/activity', _userActivity.default);
-<<<<<<< HEAD
-  return app.use("/", router);
-=======
   app.use('/api/share', _share.default);
   app.use('/api/comment', _comment.default);
   return app.use('/', router);
->>>>>>> duclong
 };
 module.exports = initWebRoutes;

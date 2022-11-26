@@ -27,19 +27,17 @@ const createUser = async (data, uid) => {
   });
   return doc;
 };
-<<<<<<< HEAD
 const getProfileById = async userId => {
   try {
     const user = await _user.User.findOne({
       userId: userId
     });
+    if (!user) throw new Error('Not found');
     return user;
   } catch (error) {
     console.log(error);
   }
 };
-=======
->>>>>>> duclong
 const profile = async uid => {
   return await _user.User.find({
     userId: uid
@@ -56,7 +54,6 @@ const editProfile = async (data, uid) => {
   });
   return user;
 };
-<<<<<<< HEAD
 const rankAndPoints = async uid => {
   const activities = await _userActivity.UserActivity.find({
     userId: uid
@@ -82,35 +79,40 @@ const rankAndPoints = async uid => {
     });
     share += countShare;
   }
-  console.log(posts);
-  return likes + share + actPoint;
-=======
-const getProfileById = async userId => {
-  try {
-    const user = await _user.User.findOne({
-      userId: userId
-    });
-    if (!user) throw new Error('Not found');
-    return user;
-  } catch (error) {
-    console.log(error);
+  const point = likes + share * 2 + actPoint;
+  const achievement = [];
+  if (point >= 500) {
+    achievement.push('Chuyên gia môi trường');
   }
->>>>>>> duclong
+  if (point >= 1000) {
+    achievement.push('Bậc thầy môi trường');
+  }
+  if (point >= 2000) {
+    achievement.push('Thạc sĩ môi trường');
+  }
+  if (point >= 4000) {
+    achievement.push('Tiến sĩ môi trường');
+  }
+  if (point >= 6000) {
+    achievement.push('Nhà khoa học môi trường');
+  }
+  if (point >= 10000) {
+    achievement.push('Chúa tể môi trường');
+  }
+  return {
+    point,
+    achievement,
+    money: point * 10
+  };
 };
 const userService = {
   getAllUsers: getAllUsers,
   createUser: createUser,
-<<<<<<< HEAD
   profile: profile,
   editProfile: editProfile,
   rankAndPoints: rankAndPoints,
   getAllUsers: getAllUsers,
   createUser: createUser,
   getProfileById: getProfileById
-=======
-  getProfileById: getProfileById,
-  profile: profile,
-  editProfile: editProfile
->>>>>>> duclong
 };
 exports.userService = userService;

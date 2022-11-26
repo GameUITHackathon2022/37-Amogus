@@ -8,6 +8,7 @@ const createPost = async (req, res) => {
   try {
     const decodeValue = await decodeToken(req, res)
     const doc = await postService.createPost(req.body, decodeValue.uid)
+    if (!doc) res.status(404).send('not found')
     res.status(200).json(doc)
   } catch (error) {
     console.error(error)
@@ -66,9 +67,23 @@ const getPostNoneCheck = async (req, res, next) => {
     res.status(400).end()
   }
 }
+const deletePost = async (req, res) => {
+  {
+    try {
+      const decodeValue = await decodeToken(req, res)
+      const doc = await postService.deletePost(req.query.id, decodeValue.uid)
+      res.status(200).json(doc)
+    } catch (error) {
+      console.log(error)
+      res.status(400).end()
+    }
+  }
+}
+
 export const postController = {
   getPosts: getPosts,
   createPost: createPost,
   verifyPost: verifyPost,
   getPostNoneCheck: getPostNoneCheck,
+  deletePost: deletePost,
 }

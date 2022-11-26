@@ -29,11 +29,12 @@ const checkin = async (req, res) => {
 const getListUser = async (req, res, next) => {
   try {
     const postId = req.query.postId;
+    console.log(postId);
     const users = await _userActivity.userActivityService.getUsers(postId);
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
-    req.status(404).send(error.message);
+    res.status(404).send(error.message);
   }
 };
 const controller = {

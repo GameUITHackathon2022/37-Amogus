@@ -35,6 +35,7 @@ const checkin = async (id, userId, uid) => {
 }
 const getUsers = async (postId) => {
   const activities = await UserActivity.find({ postId: postId })
+  console.log(activities)
   if (!activities || activities.length === 0) throw new Error('not found')
   const results = new Array()
   for (const activity of activities) {

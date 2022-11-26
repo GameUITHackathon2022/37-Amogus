@@ -13,6 +13,7 @@ const createPost = async (req, res) => {
   try {
     const decodeValue = await (0, _middleware.decodeToken)(req, res);
     const doc = await _post.postService.createPost(req.body, decodeValue.uid);
+    if (!doc) res.status(404).send('not found');
     res.status(200).json(doc);
   } catch (error) {
     console.error(error);
@@ -64,10 +65,23 @@ const getPostNoneCheck = async (req, res, next) => {
     res.status(400).end();
   }
 };
+const deletePost = async (req, res) => {
+  {
+    try {
+      const decodeValue = await (0, _middleware.decodeToken)(req, res);
+      const doc = await _post.postService.deletePost(req.query.id, decodeValue.uid);
+      res.status(200).json(doc);
+    } catch (error) {
+      console.log(error);
+      res.status(400).end();
+    }
+  }
+};
 const postController = {
   getPosts: getPosts,
   createPost: createPost,
   verifyPost: verifyPost,
-  getPostNoneCheck: getPostNoneCheck
+  getPostNoneCheck: getPostNoneCheck,
+  deletePost: deletePost
 };
 exports.postController = postController;

@@ -24,6 +24,7 @@ const createUser = async (data, uid) => {
 const getProfileById = async (userId) => {
   try {
     const user = await User.findOne({ userId: userId })
+    if (!user) throw new Error('Not found')
     return user
   } catch (error) {
     console.log(error)
@@ -66,7 +67,7 @@ const rankAndPoints = async (uid) => {
     share += countShare
   }
 
-  const point = likes + share + actPoint
+  const point = likes + share * 2 + actPoint
   const achievement = []
   if (point >= 500) {
     achievement.push('Chuyên gia môi trường')
@@ -89,6 +90,7 @@ const rankAndPoints = async (uid) => {
   return {
     point,
     achievement,
+    money: point * 10
   }
 }
 
