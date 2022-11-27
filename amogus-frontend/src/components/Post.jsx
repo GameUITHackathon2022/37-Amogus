@@ -60,6 +60,8 @@ const Post = ({ scrutinize, post, checkin }) => {
     }
   }, []);
 
+  console.log(scrutinize);
+
   return (
     <div className='w-[600px] max-w-[100%] rounded-xl py-4 pl-1 pr-4 bg-white'>
       {/* Post header */}
@@ -141,6 +143,7 @@ const Post = ({ scrutinize, post, checkin }) => {
       )}
     </div>
   );
+  console.log("🚀 ~ file: Post.jsx ~ line 144 ~ Post ~ scrutinize", scrutinize);
 };
 
 export default Post;

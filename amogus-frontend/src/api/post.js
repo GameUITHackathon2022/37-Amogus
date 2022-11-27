@@ -62,10 +62,10 @@ export const joinActivity = (token, id) => {
         "/activity/join",
         {},
         {
+          params: {
+            id,
+          },
           headers: {
-            params: {
-              id,
-            },
             Authorization: "Bearer " + token,
           },
         }
