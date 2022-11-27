@@ -1,13 +1,26 @@
 import { Button } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiFillHome, AiFillTrophy, AiOutlineHome, AiOutlineTrophy } from "react-icons/ai";
 import { RiUser3Fill, RiUser3Line } from "react-icons/ri";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../utils/UserProvider";
+import { RiAdminFill, RiAdminLine } from "react-icons/ri";
+import { AiOutlineCheckCircle, AiFillCheckCircle } from "react-icons/ai";
+
+const getIndex = () => {
+  const path = window.location.pathname;
+
+  if (path.includes("/profile")) return 1;
+  if (path.includes("/achievement")) return 2;
+  if (path.includes("/approve")) return 3;
+  if (path.includes("/check")) return 4;
+
+  return 0;
+};
 
 const Sidebar = () => {
-  const [index, setIndex] = useState(0);
-
+  const [index, setIndex] = useState(getIndex());
   const menus = [
     ["Trang chủ", "/", <AiFillHome className='text-black text-xl' />, <AiOutlineHome className='text-black text-xl' />],
     [
@@ -23,8 +36,9 @@ const Sidebar = () => {
       <AiOutlineTrophy className='text-black text-xl' />,
     ],
   ];
+  const { user, loading } = useContext(UserContext);
 
-  const selectedItem = menus[index];
+  if (loading) return;
 
   return (
     <div className='space-y-4 sticky top-4'>
@@ -35,18 +49,44 @@ const Sidebar = () => {
             icon={icon}
             icon2={icon2}
             path={path}
-            selectedItem={selectedItem}
+            index={index}
+            itemIndex={i}
             onClick={() => setIndex(i)}
           >
             {menuItem}
           </SidebarItem>
         );
       })}
+
+      {user && user.role === "ADMIN" && (
+        <>
+          <SidebarItem
+            path={"/approve"}
+            index={index}
+            itemIndex={3}
+            onClick={() => setIndex(3)}
+            icon={<RiAdminFill className='text-black text-xl' />}
+            icon2={<RiAdminLine className='text-black text-xl' />}
+          >
+            Duyệt bài
+          </SidebarItem>
+          <SidebarItem
+            path={"/check"}
+            index={index}
+            itemIndex={4}
+            onClick={() => setIndex(4)}
+            icon={<AiFillCheckCircle className='text-black text-xl' />}
+            icon2={<AiOutlineCheckCircle className='text-black text-xl' />}
+          >
+            Điểm danh
+          </SidebarItem>
+        </>
+      )}
     </div>
   );
 };
 
-const SidebarItem = ({ icon, path, children, selectedItem, onClick, icon2 }) => {
+const SidebarItem = ({ icon, path, children, index, itemIndex, onClick, icon2 }) => {
   const navigate = useNavigate();
   return (
     <>
@@ -58,10 +98,10 @@ const SidebarItem = ({ icon, path, children, selectedItem, onClick, icon2 }) => 
             onClick();
           }}
           light
-          icon={selectedItem[0] === children ? icon : icon2}
+          icon={index === itemIndex ? icon : icon2}
           size='xl'
         >
-          <span className={classNames(" text-black", selectedItem[0] === children ? "font-medium" : "font-light")}>
+          <span className={classNames(" text-black", index === itemIndex ? "font-medium" : "font-light")}>
             {children}
           </span>
         </Button>
@@ -79,7 +119,7 @@ const SidebarItem = ({ icon, path, children, selectedItem, onClick, icon2 }) => 
             onClick();
           }}
           light
-          icon={selectedItem[0] === children ? icon : icon2}
+          icon={index === itemIndex ? icon : icon2}
           size='xl'
         ></Button>
       </div>

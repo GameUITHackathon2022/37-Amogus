@@ -23,8 +23,43 @@ const createUser = (token, email, name) => {
 export const getProfile = (token) => {
   return new Promise((resolve, reject) => {
     base
+      .get("/user/profile", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => resolve(response))
+      .catch((error) => reject(error));
+  });
+};
+
+export const editProfile = (token, name, ava, about = "", address = "") => {
+  return new Promise((resolve, reject) => {
+    base
+      .put(
+        "/user/editProfile",
+        {
+          name,
+          about,
+          address,
+          ava,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((response) => resolve(response))
+      .catch((error) => reject(error));
+  });
+};
+
+export const getUserAchievement = (token) => {
+  return new Promise((resolve, reject) => {
+    base
       .get(
-        "/user/profile",
+        "/user/rank",
         {
           headers: {
             Authorization: "Bearer " + token,

@@ -1,23 +1,24 @@
-import React, { useState } from "react";
-import { Navbar, Button, Text, Avatar, Dropdown, Input, useTheme } from "@nextui-org/react";
+import React, { useContext } from "react";
+import { Navbar, Button, Text, Input, User, Dropdown } from "@nextui-org/react";
 import { SearchIcon } from "../assets/SearchIcon";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { signOut } from "firebase/auth";
+import UserContext from "../utils/UserProvider";
+import { auth } from "../firebase";
 
 const Header = () => {
-  const [currNav, setNav] = useState("1");
+  const navigate = useNavigate();
 
-  const handleNavClick = (key) => {
-    setNav(key);
-  };
+  const { user, setUser } = useContext(UserContext);
 
   return (
-    <div className='sticky top-0 z-10'>
-      <Navbar isBordered={false} variant='sticky'>
+    <div className="sticky top-0 z-10">
+      <Navbar isBordered={false} variant="sticky">
         <Navbar.Brand>
-          <Link to='/' className='flex items-center'>
-            <img src={logo} alt='Logo' className='w-10 mr-6' />
-            <Text b hideIn='xs'>
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="Logo" className="w-10 mr-6" />
+            <Text b hideIn="xs">
               GREENSUS
             </Text>
           </Link>
@@ -29,20 +30,20 @@ const Header = () => {
               w: "100%",
               jc: "space-between",
             },
-          }}
-        >
+          }}>
           <Navbar.Item
             css={{
               "@xsMax": {
                 w: "100%",
                 jc: "center",
               },
-            }}
-          >
+            }}>
             <Input
               clearable
-              aria-label='search'
-              contentLeft={<SearchIcon fill='var(--nextui-colors-accents6)' size={16} />}
+              aria-label="search"
+              contentLeft={
+                <SearchIcon fill="var(--nextui-colors-accents6)" size={16} />
+              }
               contentLeftStyling={false}
               css={{
                 w: "100%",
@@ -55,7 +56,7 @@ const Header = () => {
                   dflex: "center",
                 },
               }}
-              placeholder='Search...'
+              placeholder="Tìm kiếm..."
             />
           </Navbar.Item>
           {/* <Dropdown placement="bottom-right">
@@ -72,14 +73,48 @@ const Header = () => {
             </Navbar.Item>
           </Dropdown> */}
           <Navbar.Content>
-            <Navbar.Link color='inherit' href='/login'>
-              Login
-            </Navbar.Link>
-            <Navbar.Item>
-              <Button auto flat as={Link} color={"success"} href='/signup'>
-                Sign Up
-              </Button>
-            </Navbar.Item>
+            {user ? (
+              <Dropdown placement="bottom-right">
+                <Dropdown.Trigger>
+                  <User src={user.ava} name={user.name} />
+                </Dropdown.Trigger>
+                <Dropdown.Menu aria-label="Static Actions">
+                  <Dropdown.Item key="profile">
+                    <p
+                      className="min-w-full"
+                      onClick={() => navigate("/profile")}>
+                      Cá nhân
+                    </p>
+                  </Dropdown.Item>
+                  <Dropdown.Item key="logout" color="error">
+                    <p
+                      className="min-w-full"
+                      onClick={() =>
+                        signOut(auth).then(() => {
+                          window.location.href = window.location.origin + "/";
+                          setUser(undefined);
+                        })
+                      }>
+                      Đăng xuất
+                    </p>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <>
+                <Link to="/login">Đăng nhập</Link>
+                <Navbar.Item>
+                  <Button
+                    auto
+                    flat
+                    as={Link}
+                    color={"success"}
+                    onClick={() => navigate("/signup")}>
+                    Đăng ký
+                  </Button>
+                </Navbar.Item>
+              </>
+            )}
           </Navbar.Content>
         </Navbar.Content>
       </Navbar>

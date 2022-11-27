@@ -1,34 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
-import PostEditor from "../components/PostEditor";
+import { getAdminPost } from "../api/post";
 import { Post } from "../components";
-import { getPost } from "../api/post";
 import UserContext from "../utils/UserProvider";
 
-const Home = () => {
-  const [posts, setPosts] = useState([]);
-
+const Admin = () => {
   const { user } = useContext(UserContext);
 
+  const [posts, setPosts] = useState([]);
+
   useEffect(() => {
-    getPost()
+    getAdminPost()
       .then((data) => {
+        // console.log(data.data);
         setPosts(data.data);
-        console.log(data.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
+  // console.log(user);
+  if (!user || (user && user.role !== "ADMIN")) return null;
+
   return (
     <div className='space-y-8 flex flex-col items-center'>
-      {user && <PostEditor role={user?.role} />}
-
       {posts.map((p, i) => (
-        <Post post={p} key={i} />
+        <Post post={p} key={i} scrutinize />
       ))}
     </div>
   );
 };
 
-export default Home;
+export default Admin;
