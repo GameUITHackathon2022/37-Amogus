@@ -1,7 +1,9 @@
 import { Like } from './like.model'
 
-export const create = async (postId, userId) => {
+const create = async (postId, userId) => {
   try {
+    const find = await Like.find({ postId, userId })
+    if (find.length != 0) return 'liked'
     const doc = await Like.create({ postId: postId, userId: userId })
     return doc
   } catch (error) {
@@ -17,7 +19,15 @@ const countByPostId = async (postId) => {
   }
 }
 
+const unlike = async (postId, userId) => {
+  const find = await Like.find({ postId, userId })
+  if (find.length == 0) return 'not liked'
+  await Like.deleteOne({ id: find.id })
+  return 'unliked'
+}
+
 export const likeService = {
   create: create,
   countByPostId: countByPostId,
+  unlike: unlike,
 }
