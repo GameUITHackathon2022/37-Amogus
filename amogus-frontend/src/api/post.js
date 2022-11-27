@@ -9,12 +9,32 @@ export const getPost = () => {
   });
 };
 
-export const createPost = (token, content, title, isActivity, tags, imageURL, dateStart, dateEnd, point = 0) => {
+export const createPost = (
+  token,
+  content,
+  title,
+  isActivity,
+  tags,
+  imageURL,
+  dateStart,
+  dateEnd,
+  point = 0
+) => {
   return new Promise((resolve, reject) => {
     base
       .post(
         "/post/create",
-        { token, content, title, isActivity, tags, imageURL, dateStart, dateEnd, point },
+        {
+          token,
+          content,
+          title,
+          isActivity,
+          tags,
+          imageURL,
+          dateStart,
+          dateEnd,
+          point,
+        },
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -63,10 +83,10 @@ export const joinActivity = (token, id) => {
         {},
         {
           headers: {
-            params: {
-              id,
-            },
             Authorization: "Bearer " + token,
+          },
+          params: {
+            id,
           },
         }
       )
@@ -109,8 +129,8 @@ export const getActivity = (postId) => {
 export const checkIn = (token, id, userId) => {
   return new Promise((resolve, reject) => {
     base
-      .post(
-        "/activity/join",
+      .put(
+        "/activity/checkin",
         { userId },
         {
           headers: {
