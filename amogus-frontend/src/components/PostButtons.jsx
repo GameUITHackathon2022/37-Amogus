@@ -116,6 +116,7 @@ const PostButtons = ({ shares, likes, id, isActivity }) => {
               auth.currentUser.getIdToken().then((token) => {
                 joinActivity(token, id).then(() => {
                   console.log("Joined activity successfully");
+                  console.log(token)
                   setEnrolled(true);
                 });
               });
